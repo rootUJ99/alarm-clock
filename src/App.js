@@ -2,27 +2,26 @@ import {useEffect, useState} from 'react';
 import './App.css';
 
 const alramTicksArr = [...new Array(60)].map((it, index) => index );
-const hourArr = [...new Array(24)].map((it, index) => index+1 );
+const hourArr = [...new Array(24)].map((it, index) => index );
 
 
 const  App = () => {
-  const [currDateTime, setCurrDateTime] = useState(new Date());
-  const [alramDateTime, setAlramDateTime] = useState(null);
-  const [clockForm, setClockForm] = useState({ hour: 1, minute: 0, second: 0 });
+  const [currDateTime, setCurrDateTime] = useState(new Date().toLocaleTimeString());
+  const [alramDateTimeArr, setAlramDateTimeArr] = useState([]);
+  const [clockForm, setClockForm] = useState({ hour: 0, minute: 0, second: 0 });
 
   useEffect(() => {
     const TimerId = setInterval(() => {
-      setCurrDateTime(new Date());
+      setCurrDateTime(new Date().toLocaleTimeString());
     }, 1000);
-    if (alramDateTime && (currDateTime.toLocaleTimeString() === alramDateTime.toLocaleTimeString())) {
+    if (alramDateTimeArr.map(it=>it).includes(currDateTime)) {
         console.log('tick tick');
-        console.log(currDateTime.getTime(), alramDateTime.getTime());
-
-      }
+        // console.log(currDateTime.getTime(), alramDateTimeArr.getTime());
+    }
     return () => {
       clearInterval(TimerId)
     }
-  },[alramDateTime, currDateTime]);
+  },[...alramDateTimeArr, currDateTime]);
 
 
   const handleSubmit = (e) => {
@@ -33,9 +32,12 @@ const  App = () => {
     date.setMinutes(Number(clockForm.minute))
     date.setSeconds(Number(clockForm.second))
 
-    setAlramDateTime(
-          new Date(date)
-    );
+    setAlramDateTimeArr([
+      ...new Set([
+        ...alramDateTimeArr,
+        new Date(date).toLocaleTimeString(),
+      ])
+    ]);
 
   }
 
@@ -48,7 +50,7 @@ const  App = () => {
 
   return (
     <div className="App">
-      {currDateTime.toLocaleTimeString()}
+      {currDateTime}
     <form onSubmit={handleSubmit}>
       <select value={clockForm.hour} name='hour' onChange={handleChange}>
         {hourArr.map(it=> (<option 
@@ -78,7 +80,7 @@ const  App = () => {
         SetAlram
       </button>
     </form>
-      {alramDateTime && alramDateTime.toLocaleTimeString()}
+      {alramDateTimeArr.map(it=><p>{it}</p>)}
     </div>
   );
 }
