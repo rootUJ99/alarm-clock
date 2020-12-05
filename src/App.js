@@ -1,8 +1,13 @@
 import {useEffect, useState} from 'react';
+import Button from './Components/Button';
+import Modal from './Components/Modal';
+import Select from './Components/Select';
+
 import './App.css';
 
 const minuteAndSecondArr = [...new Array(60)].map((it, index) => index );
 const hourArr = [...new Array(24)].map((it, index) => index );
+const audioSource = "https://actions.google.com/sounds/v1/alarms/dosimeter_alarm.ogg"; 
 
 
 const  App = () => {
@@ -10,6 +15,7 @@ const  App = () => {
   const [alramDateTimeArr, setAlramDateTimeArr] = useState([]);
   const [clockForm, setClockForm] = useState({ hour: 0, minute: 0, second: 0 });
   const [playAlarm, setPlayAlarm] = useState(false);
+  const [visibleModal, setVisibleModal] = useState(false);
 
   useEffect(() => {
     const TimerId = setInterval(() => {
@@ -39,7 +45,7 @@ const  App = () => {
         new Date(date).toLocaleTimeString(),
       ])
     ]);
-
+    handleShowHideModal();
   }
 
   const handleChange = (e) => {
@@ -49,50 +55,52 @@ const  App = () => {
     });
   }
 
+  const handleShowHideModal = () => setVisibleModal(!visibleModal);
+  
+  const handleDeleteAlarm = (selectedItem) => { 
+    setAlramDateTimeArr(alramDateTimeArr.filter(it => it !== selectedItem)) 
+  }
+
+  const handleEditAlarm = (selectedItem) => {
+    setVisibleModal(true);
+    const [hour, minute, second] = selectedItem.split(':')
+    setClockForm({
+      hour: Number(hour),
+      minute: Number(minute),
+      second: Number(second),
+    })
+  }
+
   return (
     <div className="App">
-      {currDateTime}
-    <form onSubmit={handleSubmit}>
-      <select value={clockForm.hour} name='hour' onChange={handleChange}>
-        {hourArr.map(it=> (<option 
-          key={it} 
-          value={it}> 
-             {it}
-          </option>)
-        )}
-      </select>
-      <select value={clockForm.minute} name='minute' onChange={handleChange}>
-        {minuteAndSecondArr.map(it=> (<option 
-          key={it} 
-          value={it}> 
-             {it}
-          </option>)
-        )}
-      </select>
-      <select value={clockForm.second} name='second' onChange={handleChange}>
-        {minuteAndSecondArr.map(it=> (<option 
-          key={it} 
-          value={it}> 
-             {it}
-          </option>)
-        )}
-      </select>
-        <button type="submit"> 
-        SetAlram
-      </button>
-    </form>
+    <div className="clock">{currDateTime}</div>
+    <div className="flex-evenly">
+    <Button onClick={handleShowHideModal}>Set Alarm</Button>
+        { playAlarm && <Button onClick={()=>{
+          setPlayAlarm(false);
+        }}>Stop Alarm</Button>
+        }
+    </div>
       {alramDateTimeArr.map(it=>(
-      <div key={it}>
-        {it} <button onClick={()=>{            
-          setAlramDateTimeArr(alramDateTimeArr.filter(fit => fit!== it));
-        }}>delete alarm</button>
+      <div key={it} className="grid-between">
+        <div className="list-clock">{it}</div>
+        <Button onClick={()=> handleEditAlarm(it)}>Edit</Button> 
+        <Button onClick={()=>handleDeleteAlarm(it)}>Delete</Button>
       </div>
           ))}
-        { playAlarm && <audio controls hidden autoPlay={playAlarm} loop src="https://actions.google.com/sounds/v1/alarms/dosimeter_alarm.ogg" /> } 
-        { playAlarm && <button onClick={()=>{
-          setPlayAlarm(false);
-        }}>stop alarm</button>
-        }
+        { playAlarm && <audio controls hidden autoPlay={playAlarm} loop src={audioSource} /> } 
+      <Modal toggle={visibleModal} onClose={handleShowHideModal}>
+        <form onSubmit={handleSubmit}>
+          <div className="flex-evenly">
+            <Select value={clockForm.hour} name='hour' onChange={handleChange} options={hourArr} /> 
+            <Select value={clockForm.minute} name='minute' onChange={handleChange} options={minuteAndSecondArr} />
+            <Select value={clockForm.second} name='second' onChange={handleChange} options={minuteAndSecondArr} />
+              <Button type="submit"> 
+              Set Alram
+            </Button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }

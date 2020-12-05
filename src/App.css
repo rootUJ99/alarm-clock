@@ -1,38 +1,114 @@
+
+:root {
+  --background: #222831;
+  --secondary-background: #495464;
+  --primary: #706897;
+  --accent: aliceblue;
+}
+html body{
+  background: var(--background);
+  color: var(--accent);
+}
 .App {
+  padding-top: 5rem;
   text-align: center;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.clock {
+  font-family: 'Arsenal', sans-serif;
+  font-size: 5rem;
+  font-weight: 600;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+.list-clock {
+  font-family: 'Arsenal', sans-serif;
+  font-weight: 600; 
+}
+
+.button {
+  background: var(--primary);
+  color: var(--accent);
+  padding: 0.7rem 1.2rem;
+  border-radius: 0.7rem;
+  border: none;
+  outline: none;
+}
+
+.select {
+  background: var(--primary);
+  color: var(--accent);
+  padding: 0.7rem 1.2rem;
+  border-radius: 0.7rem;
+  border: none;
+  outline: none;
+
+}
+
+.modal {
+  position: fixed;
+  height: 100%;
+  margin: 0;
+  z-index: 100;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  overflow: auto;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
+  display: grid;
+  place-items: end center;
+  overflow: hidden;
+}
+
+.content {
+  width: 60%;
+  height: 60%;
+  background: var(--secondary-background);
+  border-radius: 2rem;
+  padding: 2rem;
+  overflow: scroll;
+}
+
+@media(max-width: 600px) {
+  .modal {
+    align-items: flex-end;
+  }
+  .content{
+    width: 100%;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.close-button-container{
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  justify-content: flex-end;
+  cursor: pointer;
 }
 
-.App-link {
-  color: #61dafb;
+.close-button{
+  background-color: var(--accent);
+  border: none;
+  border-radius: 50%;
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+h4 {
+  font-weight: 600;
+}
+
+.grid-between {
+  display: grid;
+  grid-gap: 0.2rem;
+  grid-template-columns: 1fr 1fr 1fr;
+  justify-content: space-between;
+  justify-items: center;
+  padding: 3rem;
+}
+
+.flex-evenly {
+  display: flex;
+  gap: 0.2rem;
+  justify-content: space-evenly;
 }
