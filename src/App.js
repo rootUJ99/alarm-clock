@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import './App.css';
 
-const alramTicksArr = [...new Array(60)].map((it, index) => index );
+const minuteAndSecondArr = [...new Array(60)].map((it, index) => index );
 const hourArr = [...new Array(24)].map((it, index) => index );
 
 
@@ -9,19 +9,20 @@ const  App = () => {
   const [currDateTime, setCurrDateTime] = useState(new Date().toLocaleTimeString());
   const [alramDateTimeArr, setAlramDateTimeArr] = useState([]);
   const [clockForm, setClockForm] = useState({ hour: 0, minute: 0, second: 0 });
+  const [playAlarm, setPlayAlarm] = useState(false);
 
   useEffect(() => {
     const TimerId = setInterval(() => {
       setCurrDateTime(new Date().toLocaleTimeString());
     }, 1000);
     if (alramDateTimeArr.map(it=>it).includes(currDateTime)) {
-        console.log('tick tick');
-        // console.log(currDateTime.getTime(), alramDateTimeArr.getTime());
+      console.log('tick tick');
+      setPlayAlarm(true);
     }
     return () => {
       clearInterval(TimerId)
     }
-  },[...alramDateTimeArr, currDateTime]);
+  },[currDateTime, playAlarm]);
 
 
   const handleSubmit = (e) => {
@@ -61,7 +62,7 @@ const  App = () => {
         )}
       </select>
       <select value={clockForm.minute} name='minute' onChange={handleChange}>
-        {alramTicksArr.map(it=> (<option 
+        {minuteAndSecondArr.map(it=> (<option 
           key={it} 
           value={it}> 
              {it}
@@ -69,7 +70,7 @@ const  App = () => {
         )}
       </select>
       <select value={clockForm.second} name='second' onChange={handleChange}>
-        {alramTicksArr.map(it=> (<option 
+        {minuteAndSecondArr.map(it=> (<option 
           key={it} 
           value={it}> 
              {it}
@@ -80,7 +81,18 @@ const  App = () => {
         SetAlram
       </button>
     </form>
-      {alramDateTimeArr.map(it=><p>{it}</p>)}
+      {alramDateTimeArr.map(it=>(
+      <div key={it}>
+        {it} <button onClick={()=>{            
+          setAlramDateTimeArr(alramDateTimeArr.filter(fit => fit!== it));
+        }}>delete alarm</button>
+      </div>
+          ))}
+        { playAlarm && <audio controls hidden autoPlay={playAlarm} loop src="https://actions.google.com/sounds/v1/alarms/dosimeter_alarm.ogg" /> } 
+        { playAlarm && <button onClick={()=>{
+          setPlayAlarm(false);
+        }}>stop alarm</button>
+        }
     </div>
   );
 }
