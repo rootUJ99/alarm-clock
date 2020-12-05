@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 import Button from './Components/Button';
 import Modal from './Components/Modal';
 import Select from './Components/Select';
-
+import { useLocalStorage } from './hooks';
 import './App.css';
 
 const minuteAndSecondArr = [...new Array(60)].map((it, index) => index );
@@ -12,7 +12,7 @@ const audioSource = "https://actions.google.com/sounds/v1/alarms/dosimeter_alarm
 
 const  App = () => {
   const [currDateTime, setCurrDateTime] = useState(new Date().toLocaleTimeString());
-  const [alramDateTimeArr, setAlramDateTimeArr] = useState([]);
+  const [alramDateTimeArr, setAlramDateTimeArr] = useLocalStorage('alarmTimeArr', []);
   const [clockForm, setClockForm] = useState({ hour: 0, minute: 0, second: 0 });
   const [playAlarm, setPlayAlarm] = useState(false);
   const [visibleModal, setVisibleModal] = useState(false);
