@@ -1,8 +1,8 @@
 import { useState } from 'react';
 export const useLocalStorage = (key, initialValue) => {
   const [localStore, setLocalStore] = useState(()=>{
-    const alarmList = localStorage.getItem(key);
-    return alarmList ? JSON.parse(alarmList) : initialValue;
+    const storedItem = localStorage.getItem(key);
+    return storedItem ? JSON.parse(storedItem) : initialValue;
   });
   const setValue = (value) => {
     setLocalStore(value);
